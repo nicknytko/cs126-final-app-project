@@ -77,7 +77,8 @@ public class ChatApi {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                          /* Remove all users from the chatroom first */
                         GenericTypeIndicator<Map<String, Boolean>> userMapType =
-                                new GenericTypeIndicator<Map<String, Boolean>>() {};
+                                new GenericTypeIndicator<Map<String, Boolean>>() {
+                                };
                         Map<String, Boolean> users = dataSnapshot.getValue(userMapType);
                         for (String user : users.keySet()) {
                             removeUserFromChat(finalChatKey, user);
@@ -213,7 +214,8 @@ public class ChatApi {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                          /* Remove all chats from the user first */
                         GenericTypeIndicator<Map<String, Boolean>> chatMapType =
-                                new GenericTypeIndicator<Map<String, Boolean>>() {};
+                                new GenericTypeIndicator<Map<String, Boolean>>() {
+                                };
                         Map<String, Boolean> chats = dataSnapshot.getValue(chatMapType);
                         for (String chat : chats.keySet()) {
                             removeUserFromChat(chat, finalUserKey);
@@ -232,7 +234,8 @@ public class ChatApi {
 
     /**
      * Get all the chats that a user is in.
-     * @param userId Id of the user to lookup.
+     *
+     * @param userId       Id of the user to lookup.
      * @param dataCallback Function that is run for each chatroom that is loaded.
      */
     public static void getAllUserChats(String userId, final ValueEventListener dataCallback) {
@@ -245,7 +248,8 @@ public class ChatApi {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         /* From each chat, get its data from the chats json group */
                         GenericTypeIndicator<Map<String, Boolean>> chatMapType =
-                                new GenericTypeIndicator<Map<String, Boolean>>() {};
+                                new GenericTypeIndicator<Map<String, Boolean>>() {
+                                };
                         Map<String, Boolean> chats = dataSnapshot.getValue(chatMapType);
                         for (String chat : chats.keySet()) {
                             dbRef.child(CHATS_DATABASE_PATH)

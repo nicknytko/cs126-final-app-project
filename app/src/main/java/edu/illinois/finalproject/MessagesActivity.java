@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.textservice.TextInfo;
 import android.widget.EditText;
 
 /**
@@ -24,6 +24,9 @@ public class MessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
+        /* Enable the back button */
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         final EditText messageInput = (EditText) findViewById(R.id.et_chat_input);
         final MessagesViewAdapter adapter = new MessagesViewAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
@@ -35,7 +38,7 @@ public class MessagesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         ChatMessage tempMessage1 = new ChatMessage(messageText1, "user1");
-        ChatMessage tempMessage2 = new ChatMessage(messageText2,  "user1");
+        ChatMessage tempMessage2 = new ChatMessage(messageText2, "user1");
         ChatMessage tempMessage3 = new ChatMessage(messageText3, "self");
         adapter.addMessage(tempMessage1);
         adapter.addMessage(tempMessage2);
@@ -53,5 +56,16 @@ public class MessagesActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /* Adapted from StackOverflow:
+       https://stackoverflow.com/questions/14545139/android-back-button-in-the-title-bar */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
