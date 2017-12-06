@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/iv_profile_picture"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@android:drawable/sym_def_app_icon"/>
+
+    <TextView
+        android:id="@+id/tv_chat_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/iv_profile_picture"
+        android:text="Chat Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <TextView
+        android:id="@+id/tv_chat_latest_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tv_chat_name"
+        android:layout_below="@+id/tv_chat_name"
+        android:layout_marginTop="4dp"
+        android:text="This is the latest message. Blah blah blah."
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/tv_chat_latest_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
+        android:text="6:03 PM"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"/>
+
+
+</RelativeLayout>
