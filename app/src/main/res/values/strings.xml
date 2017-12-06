@@ -3,4 +3,7 @@
     <string name="no_messages">No Messages</string>
     <string name="content_description_profile_picture">Profile Picture</string>
     <string name="content_description_message_bubble">Message Box</string>
+    <string name="chat_input_label">Write a message...</string>
+    <string name="placeholder_text_message">Hello, World! This is an example of a chat message that spans multiple lines.</string>
+    <string name="placeholder_text_time">1:37 PM</string>
 </resources>

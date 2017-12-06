@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/iv_profile_picture"
@@ -13,9 +14,6 @@
         android:layout_marginTop="4dp"
         android:layout_alignBottom="@id/iv_chat_bubble"
         android:contentDescription="@string/content_description_profile_picture"
-        app:civ_shadow="true"
-        app:civ_shadow_color="@color/colorPrimaryDark"
-        app:civ_shadow_radius="8"
         android:src="@android:drawable/sym_def_app_icon" />
 
     <ImageView
@@ -46,16 +44,17 @@
         android:paddingStart="0dp">
         <TextView
             android:id="@+id/tv_message_text"
-            android:text="Hello, World!"
+            android:text="@string/placeholder_text_message"
             android:textColor="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp" />
         <TextView
             android:id="@+id/tv_timestamp"
-            android:text="1:37 PM"
+            android:text="@string/placeholder_text_time"
             android:textColor="#eeeeee"
             android:textSize="12sp"
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_message_text"
