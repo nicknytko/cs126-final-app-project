@@ -3,6 +3,7 @@ package edu.illinois.finalproject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,10 +56,20 @@ public class ChatsActivity extends AppCompatActivity {
         findViewById(R.id.fab_create_new_chat).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatRoom tempChat1 = new ChatRoom("Chat Name", null,
-                        new ChatMessage(CHAT_DUMMY_TEXT, "user1"));
-                adapter.addChat(tempChat1);
-                noChatsText.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(context, SearchUsersActivity.class);
+                context.startActivity(intent);
+
+                /* Simulate a new chatroom being created */
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ChatRoom tempChat1 = new ChatRoom("Chat Name", null,
+                                new ChatMessage(CHAT_DUMMY_TEXT, "user1"));
+                        adapter.addChat(tempChat1);
+                        noChatsText.setVisibility(View.INVISIBLE);
+                    }
+                }, 200);
             }
         });
     }
