@@ -1,5 +1,7 @@
 package edu.illinois.finalproject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,14 @@ public class ChatsViewAdapter extends
     @Override
     public void onBindViewHolder(ChatsViewHolder holder, int position) {
         holder.bind(chats.get(position));
+        final Context context = holder.itemView.getContext();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MessagesActivity.class);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -63,10 +73,12 @@ public class ChatsViewAdapter extends
         private TextView name;
         private TextView lastMessage;
         private TextView lastTimeStamp;
+        public View itemView;
 
         public ChatsViewHolder(View itemView) {
             super(itemView);
 
+            this.itemView = itemView;
             icon = (CircularImageView) itemView.findViewById(R.id.iv_profile_picture);
             name = (TextView) itemView.findViewById(R.id.tv_chat_name);
             lastMessage = (TextView) itemView.findViewById(R.id.tv_chat_latest_message);

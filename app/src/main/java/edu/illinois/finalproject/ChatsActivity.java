@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.TextView;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
@@ -19,6 +20,9 @@ public class ChatsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final TextView noChatsText = (TextView) findViewById(R.id.tv_no_chats);
+        noChatsText.setVisibility(View.VISIBLE);
 
         final ChatsViewAdapter adapter = new ChatsViewAdapter();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_chats);
@@ -38,6 +42,9 @@ public class ChatsActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 adapter.removeChat(viewHolder.getAdapterPosition());
+                if (adapter.getItemCount() == 0) {
+                    noChatsText.setVisibility(View.VISIBLE);
+                }
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
@@ -51,6 +58,7 @@ public class ChatsActivity extends AppCompatActivity {
                 ChatRoom tempChat1 = new ChatRoom("Chat Name", null,
                         new ChatMessage(CHAT_DUMMY_TEXT, "user1"));
                 adapter.addChat(tempChat1);
+                noChatsText.setVisibility(View.INVISIBLE);
             }
         });
     }
