@@ -10,6 +10,10 @@ import android.widget.SearchView;
  * Created by Nicolas Nytko on 12/6/17.
  */
 
+/**
+ * Activity to search for users in order to create a new chat room.
+ */
+
 public class SearchUsersActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,8 @@ public class SearchUsersActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
+
+        /* Add some dummy users */
 
         adapter.addUser(new ChatUser("email", "Demo User 1"));
         adapter.addUser(new ChatUser("email", "Demo User 2"));

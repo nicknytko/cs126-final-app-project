@@ -1,8 +1,6 @@
 package edu.illinois.finalproject;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,10 +55,20 @@ public class UserSearchAdapter extends
         return users.size();
     }
 
+    /**
+     * Add a user to the search list recycler view.
+     *
+     * @param user User to add.
+     */
+
     public void addUser(ChatUser user) {
         users.add(user);
         notifyDataSetChanged();
     }
+
+    /**
+     * Clear the list so that no users are shown.
+     */
 
     public void removeAllUsers() {
         users.clear();
@@ -77,6 +85,12 @@ public class UserSearchAdapter extends
             icon = (CircularImageView) itemView.findViewById(R.id.iv_profile_picture);
             name = (TextView) itemView.findViewById(R.id.tv_user_name);
         }
+
+        /**
+         * Bind a user to this view holder so that their data may be seen.
+         *
+         * @param user User to bind.
+         */
 
         public void bind(ChatUser user) {
             name.setText(user.getName());

@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,10 +56,22 @@ public class ChatsViewAdapter extends
         return chats.size();
     }
 
+    /**
+     * Add a chatroom to the recycler view. Will get appended to the bottom.
+     *
+     * @param chatRoom Chatroom to add.
+     */
+
     public void addChat(ChatRoom chatRoom) {
         chats.add(chatRoom);
         notifyDataSetChanged();
     }
+
+    /**
+     * Removes a single chatroom from the recycler view.
+     *
+     * @param position Index of the chatroom to delete.
+     */
 
     public void removeChat(int position) {
         chats.remove(position);
@@ -84,6 +94,12 @@ public class ChatsViewAdapter extends
             lastMessage = (TextView) itemView.findViewById(R.id.tv_chat_latest_message);
             lastTimeStamp = (TextView) itemView.findViewById(R.id.tv_chat_latest_timestamp);
         }
+
+        /**
+         * Displays details about a given chatroom.
+         *
+         * @param chatRoom Chatroom to display details about.
+         */
 
         public void bind(ChatRoom chatRoom) {
             name.setText(chatRoom.getName());

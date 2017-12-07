@@ -54,6 +54,13 @@ public class MessagesViewAdapter extends
         return messages.size();
     }
 
+    /**
+     * Adds a single message, appending it to the bottom of the list and then automatically
+     * scrolling to the bottom.
+     *
+     * @param newMessage Message to add.
+     */
+
     public void addMessage(ChatMessage newMessage) {
         messages.add(newMessage);
         notifyDataSetChanged();
@@ -72,6 +79,12 @@ public class MessagesViewAdapter extends
             messageData = (TextView) itemView.findViewById(R.id.tv_message_text);
             timeStamp = (TextView) itemView.findViewById(R.id.tv_timestamp);
         }
+
+        /**
+         * Binds message data to this view holder so that it can be seen.
+         *
+         * @param message Message to bind.
+         */
 
         public void bind(ChatMessage message) {
             messageData.setText(message.getMessage());

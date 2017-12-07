@@ -12,6 +12,10 @@ import android.widget.EditText;
  * Created by Nicolas Nytko on 12/6/17.
  */
 
+/**
+ * Activity displaying all of the given messages in a single chatroom.
+ */
+
 public class MessagesActivity extends AppCompatActivity {
     private static final String messageText1 = "Hello, World!";
     private static final String messageText2 = "This is an example of message that spans " +
@@ -36,6 +40,8 @@ public class MessagesActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_messages);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
+
+        /* Load in some dummy data */
 
         ChatMessage tempMessage1 = new ChatMessage(messageText1, "user1");
         ChatMessage tempMessage2 = new ChatMessage(messageText2, "user1");

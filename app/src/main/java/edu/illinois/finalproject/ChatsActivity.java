@@ -14,6 +14,11 @@ import android.widget.TextView;
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
+/**
+ * Activity that will list all of the chats that the user is in.  Will be the first thing the user
+ * sees on start up after the login.
+ */
+
 public class ChatsActivity extends AppCompatActivity {
     private static final String CHAT_DUMMY_TEXT = "This was the last sent message. Blah blah blah.";
 
@@ -34,20 +39,21 @@ public class ChatsActivity extends AppCompatActivity {
         /* Handle swipes on the recycler view */
         ItemTouchHelper.SimpleCallback itemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, LEFT | RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                  RecyclerView.ViewHolder target) {
-                return false;
-            }
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                adapter.removeChat(viewHolder.getAdapterPosition());
-                if (adapter.getItemCount() == 0) {
-                    noChatsText.setVisibility(View.VISIBLE);
-                }
-            }
-        };
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        adapter.removeChat(viewHolder.getAdapterPosition());
+                        if (adapter.getItemCount() == 0) {
+                            noChatsText.setVisibility(View.VISIBLE);
+                        }
+                    }
+                };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
