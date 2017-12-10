@@ -28,6 +28,7 @@ import java.util.Map;
 public class MessagesActivity extends AppCompatActivity {
     public static final String CHAT_ID_PARCELABLE_TAG = "chat_id";
     private ChildEventListener messageHandler;
+    private String chatId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MessagesActivity extends AppCompatActivity {
         layoutManager.setStackFromEnd(true);
 
         /* Get chat data like name & icon */
-        final String chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
+        chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
         ChatApi.getChatroomDetails(chatId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -96,6 +97,15 @@ public class MessagesActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (messageHandler != null) {
+            ChatApi.removeMessageHandler(chatId, messageHandler);
+            messageHandler = null;
+        }
     }
 
     /* Adapted from StackOverflow:
