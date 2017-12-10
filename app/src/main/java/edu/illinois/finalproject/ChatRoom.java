@@ -9,6 +9,12 @@ public class ChatRoom {
     private String icon;
     private ChatMessage lastMessage;
 
+    ChatRoom() {
+        name = null;
+        icon = null;
+        lastMessage = null;
+    }
+
     ChatRoom(String name, String icon, ChatMessage lastMessage) {
         this.name = name;
         this.icon = icon;

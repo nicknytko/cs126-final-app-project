@@ -16,6 +16,7 @@ public class UserCache {
 
     /**
      * Checks if a user is stored in the cache.
+     *
      * @param userId User to look up.
      * @return True if the user is cached.
      */
@@ -25,14 +26,15 @@ public class UserCache {
 
     /**
      * Loads a user from Firebase.
-     * @param userId ID of the user to retrieve.
+     *
+     * @param userId   ID of the user to retrieve.
      * @param callback Function that is called when the data is retrieved.
      */
     public static void loadUser(final String userId, final UserLoadedCallback callback) {
         ChatApi.getUser(userId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ChatUser loadedUser = null;
+                ChatUser loadedUser = dataSnapshot.getValue(ChatUser.class);
                 users.put(userId, loadedUser);
                 if (callback != null) {
                     callback.onLoaded(loadedUser);
@@ -47,7 +49,8 @@ public class UserCache {
 
     /**
      * Loads a user from the cache if available, otherwise from the Firebase DB.
-     * @param userId ID of the user to retrieve.
+     *
+     * @param userId   ID of the user to retrieve.
      * @param callback Function that is called when the data is retrieved.
      */
     public static void getUser(String userId, final UserLoadedCallback callback) {

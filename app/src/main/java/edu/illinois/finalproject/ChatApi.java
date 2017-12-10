@@ -161,6 +161,18 @@ public class ChatApi {
     }
 
     /**
+     * Obtains details about a single chat room.
+     *
+     * @param chatKey  Chat room to look up.
+     * @param callback Function callback to run when data is obtained.
+     */
+    public static void getChatroomDetails(String chatKey, ValueEventListener callback) {
+        dbRef.child(CHATS_DATABASE_PATH)
+                .child(chatKey)
+                .addListenerForSingleValueEvent(callback);
+    }
+
+    /**
      * Get the last sent message in a chat.
      *
      * @param chatKey      Chat room id to get message from.
@@ -177,13 +189,26 @@ public class ChatApi {
      * Get all messages sent in a given chat.
      *
      * @param chatKey      Chat room id to get messages from.
-     * @param dataCallback Function to run when the data is retrieved.
+     * @param dataCallback Function to run when message data changes.
      */
-    public static void getAllMessages(String chatKey, ValueEventListener dataCallback) {
+    public static void setMessageHandler(String chatKey, ValueEventListener dataCallback) {
         dbRef.child(MESSAGES_DATABASE_PATH)
                 .child(chatKey)
                 .orderByChild("timestamp")
-                .addListenerForSingleValueEvent(dataCallback);
+                .addValueEventListener(dataCallback);
+    }
+
+    /**
+     * Removes a message handler from a given chat room.
+     *
+     * @param chatKey      Chat room id to get messages from.
+     * @param dataCallback Function to run when message data changes.
+     */
+    public static void removeMessageHandler(String chatKey, ValueEventListener dataCallback) {
+        dbRef.child(MESSAGES_DATABASE_PATH)
+                .child(chatKey)
+                .orderByChild("timestamp")
+                .removeEventListener(dataCallback);
     }
 
     /**
@@ -266,7 +291,8 @@ public class ChatApi {
 
     /**
      * Looks up a user's data by their user id.
-     * @param userId User id to look up by.
+     *
+     * @param userId       User id to look up by.
      * @param dataCallback Function that is run when the user is located.
      */
     public static void getUser(String userId, final ValueEventListener dataCallback) {

@@ -12,24 +12,24 @@ import java.util.Date;
 public class ChatMessage {
     private String message;
     private long timestamp;
-    private String user;
+    private String userId;
 
     public ChatMessage() {
         message = null;
         timestamp = 0;
-        user = null;
+        userId = null;
     }
 
-    public ChatMessage(String message, String user) {
+    public ChatMessage(String message, String userId) {
         this.message = message;
         this.timestamp = new Date().getTime();
-        this.user = user;
+        this.userId = userId;
     }
 
-    public ChatMessage(String message, long timestamp, String user) {
+    public ChatMessage(String message, long timestamp, String userId) {
         this.message = message;
         this.timestamp = timestamp;
-        this.user = user;
+        this.userId = userId;
     }
 
     public String getMessage() {
@@ -41,7 +41,7 @@ public class ChatMessage {
     }
 
     public String getUserId() {
-        return user;
+        return userId;
     }
 
     public void setMessage(String message) {
@@ -52,7 +52,7 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

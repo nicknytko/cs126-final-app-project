@@ -8,6 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
+
 /**
  * Created by Nicolas Nytko on 12/6/17.
  */
@@ -17,11 +24,8 @@ import android.widget.EditText;
  */
 
 public class MessagesActivity extends AppCompatActivity {
-    private static final String messageText1 = "Hello, World!";
-    private static final String messageText2 = "This is an example of message that spans " +
-            "multiple lines.  The view and 9-patch will automatically resize itself to fit" +
-            " the message contents.";
-    private static final String messageText3 = "This is a message that the user sent.";
+    public static final String CHAT_ID_PARCELABLE_TAG = "chat_id";
+    private ValueEventListener messageHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,24 +35,52 @@ public class MessagesActivity extends AppCompatActivity {
         /* Enable the back button */
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        /* Set up UI elements */
         final EditText messageInput = (EditText) findViewById(R.id.et_chat_input);
         final MessagesViewAdapter adapter = new MessagesViewAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
 
+        /* Get chat data like name & icon */
+        final String chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
+        ChatApi.getChatroomDetails(chatId, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
+                /* Do stuff with this */
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /* Set up a handler to handle messages getting sent */
+        messageHandler = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<Map<String, ChatMessage>> messageType =
+                        new GenericTypeIndicator<Map<String, ChatMessage>>() {
+                        };
+                Map<String, ChatMessage> chats = dataSnapshot.getValue(messageType);
+                //for (ChatMessage message : chats.values()) {
+                for (int i = chats.values().size() - 1; i >= 0; i--) {
+                    adapter.addMessage((ChatMessage) chats.values().toArray()[i]);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        ChatApi.setMessageHandler(chatId, messageHandler);
+
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_messages);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
-
-        /* Load in some dummy data */
-
-        ChatMessage tempMessage1 = new ChatMessage(messageText1, "user1");
-        ChatMessage tempMessage2 = new ChatMessage(messageText2, "user1");
-        ChatMessage tempMessage3 = new ChatMessage(messageText3, "self");
-        adapter.addMessage(tempMessage1);
-        adapter.addMessage(tempMessage2);
-        adapter.addMessage(tempMessage3);
 
         findViewById(R.id.fab_send_message).setOnClickListener(new View.OnClickListener() {
             @Override

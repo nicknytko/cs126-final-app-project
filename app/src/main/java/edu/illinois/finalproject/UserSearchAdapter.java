@@ -60,7 +60,6 @@ public class UserSearchAdapter extends
      *
      * @param user User to add.
      */
-
     public void addUser(ChatUser user) {
         users.add(user);
         notifyDataSetChanged();
@@ -69,7 +68,6 @@ public class UserSearchAdapter extends
     /**
      * Clear the list so that no users are shown.
      */
-
     public void removeAllUsers() {
         users.clear();
         notifyDataSetChanged();
@@ -91,7 +89,6 @@ public class UserSearchAdapter extends
          *
          * @param user User to bind.
          */
-
         public void bind(ChatUser user) {
             name.setText(user.getName());
             if (user.getProfilePicture() != null) {

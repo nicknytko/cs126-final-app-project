@@ -24,6 +24,7 @@ import java.util.Locale;
 public class ChatsViewAdapter extends
         RecyclerView.Adapter<ChatsViewAdapter.ChatsViewHolder> {
     private List<ChatRoom> chats = new ArrayList<>();
+    private List<String> chatIds = new ArrayList<>();
 
     @Override
     public int getItemViewType(int position) {
@@ -42,10 +43,12 @@ public class ChatsViewAdapter extends
     public void onBindViewHolder(ChatsViewHolder holder, int position) {
         holder.bind(chats.get(position));
         final Context context = holder.itemView.getContext();
+        final int finalPos = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MessagesActivity.class);
+                intent.putExtra(MessagesActivity.CHAT_ID_PARCELABLE_TAG, chatIds.get(finalPos));
                 context.startActivity(intent);
             }
         });
@@ -62,7 +65,8 @@ public class ChatsViewAdapter extends
      * @param chatRoom Chatroom to add.
      */
 
-    public void addChat(ChatRoom chatRoom) {
+    public void addChat(String chatId, ChatRoom chatRoom) {
+        chatIds.add(chatId);
         chats.add(chatRoom);
         notifyDataSetChanged();
     }
