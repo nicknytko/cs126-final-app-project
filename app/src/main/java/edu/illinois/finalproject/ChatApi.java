@@ -265,6 +265,17 @@ public class ChatApi {
     }
 
     /**
+     * Looks up a user's data by their user id.
+     * @param userId User id to look up by.
+     * @param dataCallback Function that is run when the user is located.
+     */
+    public static void getUser(String userId, final ValueEventListener dataCallback) {
+        dbRef.child(USERS_DATABASE_PATH)
+                .child(userId)
+                .addListenerForSingleValueEvent(dataCallback);
+    }
+
+    /**
      * Searches for a given user by their email address.
      *
      * @param email        Email to search by.
