@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.GenericTypeIndicator;
@@ -25,7 +27,7 @@ import java.util.Map;
 
 public class MessagesActivity extends AppCompatActivity {
     public static final String CHAT_ID_PARCELABLE_TAG = "chat_id";
-    private ValueEventListener messageHandler;
+    private ChildEventListener messageHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,23 +60,23 @@ public class MessagesActivity extends AppCompatActivity {
         });
 
         /* Set up a handler to handle messages getting sent */
-        messageHandler = new ValueEventListener() {
+        messageHandler = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<Map<String, ChatMessage>> messageType =
-                        new GenericTypeIndicator<Map<String, ChatMessage>>() {
-                        };
-                Map<String, ChatMessage> chats = dataSnapshot.getValue(messageType);
-                //for (ChatMessage message : chats.values()) {
-                for (int i = chats.values().size() - 1; i >= 0; i--) {
-                    adapter.addMessage((ChatMessage) chats.values().toArray()[i]);
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                adapter.addMessage(dataSnapshot.getValue(ChatMessage.class));
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
-            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
         };
         ChatApi.setMessageHandler(chatId, messageHandler);
 
@@ -88,9 +90,9 @@ public class MessagesActivity extends AppCompatActivity {
                 /* Dont allow the user to send blank messages */
                 if (messageInput.getText().length() > 0) {
                     ChatMessage newMessage = new ChatMessage(messageInput.getText().toString(),
-                            "self");
+                            FirebaseAuth.getInstance().getUid());
                     messageInput.setText("");
-                    adapter.addMessage(newMessage);
+                    ChatApi.addMessageToChat(chatId, newMessage);
                 }
             }
         });

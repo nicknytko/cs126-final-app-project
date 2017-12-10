@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
@@ -28,8 +29,7 @@ public class MessagesViewAdapter extends
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getUserId().equals("self")) {
-            /* Hard code user for now */
+        if (messages.get(position).getUserId().equals(FirebaseAuth.getInstance().getUid())) {
             return R.layout.chat_message_self_item;
         } else {
             return R.layout.chat_message_other_item;
@@ -62,7 +62,19 @@ public class MessagesViewAdapter extends
      */
 
     public void addMessage(ChatMessage newMessage) {
-        messages.add(newMessage);
+        /* Insertion sort the new message into the correct place */
+        if (messages.size() == 0 ||
+                newMessage.getTimestamp() > messages.get(messages.size() - 1).getTimestamp()) {
+            messages.add(newMessage);
+        } else {
+            int index = 0;
+            for (int i = messages.size() - 2; i >= 0 && index == 0; i--) {
+                if (newMessage.getTimestamp() < messages.get(i).getTimestamp()) {
+                    index = i;
+                }
+            }
+            messages.add(index, newMessage);
+        }
         notifyDataSetChanged();
         recyclerView.scrollToPosition(messages.size() - 1);
     }

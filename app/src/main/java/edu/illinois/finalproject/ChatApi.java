@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
@@ -140,22 +141,19 @@ public class ChatApi {
      * Appends a message to a chatroom, automatically giving a timestamp.
      *
      * @param chatKey Chat room id to append to.
-     * @param userId  User id that sent the message.
      * @param message Message data to send.
      * @return Id of the newly created message.
      */
-    public static String addMessageToChat(String chatKey, String userId, String message) {
-        ChatMessage newMessage = new ChatMessage(message, userId);
-
+    public static String addMessageToChat(String chatKey, ChatMessage message) {
         dbRef.child(CHATS_DATABASE_PATH)
                 .child(chatKey)
                 .child("lastMessage")
-                .setValue(newMessage);
+                .setValue(message);
         DatabaseReference newMessageRef =
                 dbRef.child(MESSAGES_DATABASE_PATH)
                         .child(chatKey)
                         .push();
-        newMessageRef.setValue(newMessage);
+        newMessageRef.setValue(message);
 
         return newMessageRef.getKey();
     }
@@ -189,13 +187,14 @@ public class ChatApi {
      * Get all messages sent in a given chat.
      *
      * @param chatKey      Chat room id to get messages from.
-     * @param dataCallback Function to run when message data changes.
+     * @param newDataAdded Function to run when message data changes.
      */
-    public static void setMessageHandler(String chatKey, ValueEventListener dataCallback) {
-        dbRef.child(MESSAGES_DATABASE_PATH)
+    public static void setMessageHandler(String chatKey, ChildEventListener newDataAdded) {
+        Query messages = dbRef.child(MESSAGES_DATABASE_PATH)
                 .child(chatKey)
-                .orderByChild("timestamp")
-                .addValueEventListener(dataCallback);
+                .orderByChild("timestamp");
+
+        messages.addChildEventListener(newDataAdded);
     }
 
     /**
@@ -204,7 +203,7 @@ public class ChatApi {
      * @param chatKey      Chat room id to get messages from.
      * @param dataCallback Function to run when message data changes.
      */
-    public static void removeMessageHandler(String chatKey, ValueEventListener dataCallback) {
+    public static void removeMessageHandler(String chatKey, ChildEventListener dataCallback) {
         dbRef.child(MESSAGES_DATABASE_PATH)
                 .child(chatKey)
                 .orderByChild("timestamp")

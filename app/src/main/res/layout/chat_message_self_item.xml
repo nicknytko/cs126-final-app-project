@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingBottom="8dp">
 
@@ -10,46 +9,47 @@
         android:id="@+id/iv_chat_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/rl_message_container"
         android:layout_alignEnd="@id/rl_message_container"
         android:layout_alignStart="@id/rl_message_container"
         android:layout_alignTop="@id/rl_message_container"
-        android:layout_alignBottom="@id/rl_message_container"
         android:layout_marginEnd="8dp"
-        app:srcCompat="@drawable/chatbox_ninepatch"
-        android:tint="@color/colorPrimary"
+        android:contentDescription="@string/content_description_message_bubble"
         android:scaleType="fitXY"
-        android:contentDescription="@string/content_description_message_bubble">
-    </ImageView>
+        android:tint="@color/colorPrimary"
+        app:srcCompat="@drawable/chatbox_ninepatch" />
 
     <RelativeLayout
         android:id="@+id/rl_message_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="12dp"
-        android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
         android:paddingStart="0dp"
-        android:layout_marginStart="60dp">
+        android:paddingTop="8dp">
+
         <TextView
             android:id="@+id/tv_message_text"
-            android:text="@string/placeholder_text_message"
-            android:textColor="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="8dp"
+            android:text="@string/placeholder_text_message"
+            android:textColor="#ffffff" />
+
         <TextView
             android:id="@+id/tv_timestamp"
-            android:text="@string/placeholder_text_time"
-            android:textColor="#eeeeee"
-            android:textSize="12sp"
-            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_message_text"
             android:layout_alignParentEnd="true"
+            android:layout_below="@+id/tv_message_text"
+            android:layout_marginTop="8dp"
             android:paddingEnd="12dp"
-            android:paddingStart="0dp" />
+            android:paddingStart="0dp"
+            android:text="@string/placeholder_text_time"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
     </RelativeLayout>
 
 </RelativeLayout>

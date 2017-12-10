@@ -39,7 +39,7 @@ public class ChatsActivity extends AppCompatActivity {
                 LinearLayoutManager.VERTICAL, false));
 
         /* Add all of the user's chatrooms */
-        ChatApi.getAllUserChats(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+        ChatApi.getAllUserChats(FirebaseAuth.getInstance().getUid(),
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -49,9 +49,7 @@ public class ChatsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
+                    public void onCancelled(DatabaseError databaseError) {}
                 });
 
         /* Handle swipes on the recycler view */
