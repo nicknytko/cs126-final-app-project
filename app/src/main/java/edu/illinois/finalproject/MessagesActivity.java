@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -42,6 +43,11 @@ public class MessagesActivity extends AppCompatActivity {
                 LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
 
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_messages);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.pb_loading_spinner);
+
         /* Get chat data like name & icon */
         chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
         ChatApi.getChatroomDetails(chatId, new ValueEventListener() {
@@ -62,6 +68,8 @@ public class MessagesActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 adapter.addMessage(dataSnapshot.getValue(ChatMessage.class));
+                progressBar.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -81,10 +89,6 @@ public class MessagesActivity extends AppCompatActivity {
             }
         };
         ChatApi.setMessageHandler(chatId, messageHandler);
-
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_messages);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(layoutManager);
 
         findViewById(R.id.fab_send_message).setOnClickListener(new View.OnClickListener() {
             @Override
