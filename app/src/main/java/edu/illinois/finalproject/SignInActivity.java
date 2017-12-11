@@ -93,6 +93,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        ChatApi.createUser(user.getUid(), user.getDisplayName(), user.getEmail());
                         launchDetailsActivity();
                     }
                 });

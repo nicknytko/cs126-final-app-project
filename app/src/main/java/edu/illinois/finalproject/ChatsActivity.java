@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +31,7 @@ public class ChatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final TextView noChatsText = (TextView) findViewById(R.id.tv_no_chats);
-        noChatsText.setVisibility(View.VISIBLE);
+        final ProgressBar progressSpinner = (ProgressBar) findViewById(R.id.pb_loading_spinner);
 
         final ChatsViewAdapter adapter = new ChatsViewAdapter();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_chats);
@@ -39,17 +40,28 @@ public class ChatsActivity extends AppCompatActivity {
                 LinearLayoutManager.VERTICAL, false));
 
         /* Add all of the user's chatrooms */
+        ChatApi.subscribeAllUserChats(FirebaseAuth.getInstance().getUid());
         ChatApi.getAllUserChats(FirebaseAuth.getInstance().getUid(),
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        adapter.addChat(dataSnapshot.getKey(),
-                                dataSnapshot.getValue(ChatRoom.class));
-                        noChatsText.setVisibility(View.INVISIBLE);
+                        progressSpinner.setVisibility(View.INVISIBLE);
+                        if (dataSnapshot == null) {
+                            /* If datasnapshot is null then there are no chatrooms */
+                            noChatsText.setVisibility(View.VISIBLE);
+                        } else {
+                            ChatRoom room = dataSnapshot.getValue(ChatRoom.class);
+                            adapter.addChat(dataSnapshot.getKey(), room);
+                            for (String user : room.getUsers().keySet()) {
+                                UserCache.loadUser(user, null);
+                            }
+                            noChatsText.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {}
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
                 });
 
         /* Handle swipes on the recycler view */
@@ -64,6 +76,9 @@ public class ChatsActivity extends AppCompatActivity {
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        ChatApi.removeUserFromChat(
+                                adapter.getChatId(viewHolder.getAdapterPosition()),
+                                FirebaseAuth.getInstance().getUid());
                         adapter.removeChat(viewHolder.getAdapterPosition());
                         if (adapter.getItemCount() == 0) {
                             noChatsText.setVisibility(View.VISIBLE);

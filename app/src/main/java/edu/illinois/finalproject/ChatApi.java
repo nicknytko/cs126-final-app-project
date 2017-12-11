@@ -1,13 +1,14 @@
 package edu.illinois.finalproject;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Map;
 
@@ -109,12 +110,12 @@ public class ChatApi {
                 .child("users")
                 .child(userId)
                 .setValue(true);
-
         dbRef.child(USERS_DATABASE_PATH)
                 .child(userId)
                 .child("chats")
                 .child(chatKey)
                 .setValue(true);
+        FirebaseMessaging.getInstance().subscribeToTopic(chatKey);
     }
 
     /**
@@ -129,12 +130,12 @@ public class ChatApi {
                 .child("users")
                 .child(userId)
                 .setValue(null);
-
         dbRef.child(USERS_DATABASE_PATH)
                 .child(userId)
                 .child("chats")
                 .child(chatKey)
                 .setValue(null);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(chatKey);
     }
 
     /**
@@ -171,30 +172,15 @@ public class ChatApi {
     }
 
     /**
-     * Get the last sent message in a chat.
-     *
-     * @param chatKey      Chat room id to get message from.
-     * @param dataCallback Function to run when the data is retrieved.
-     */
-    public static void getLastMessage(String chatKey, ValueEventListener dataCallback) {
-        dbRef.child(CHATS_DATABASE_PATH)
-                .child(chatKey)
-                .child("lastMessage")
-                .addListenerForSingleValueEvent(dataCallback);
-    }
-
-    /**
      * Get all messages sent in a given chat.
      *
      * @param chatKey      Chat room id to get messages from.
      * @param newDataAdded Function to run when message data changes.
      */
     public static void setMessageHandler(String chatKey, ChildEventListener newDataAdded) {
-        Query messages = dbRef.child(MESSAGES_DATABASE_PATH)
+        dbRef.child(MESSAGES_DATABASE_PATH)
                 .child(chatKey)
-                .orderByChild("timestamp");
-
-        messages.addChildEventListener(newDataAdded);
+                .addChildEventListener(newDataAdded);
     }
 
     /**
@@ -206,7 +192,6 @@ public class ChatApi {
     public static void removeMessageHandler(String chatKey, ChildEventListener dataCallback) {
         dbRef.child(MESSAGES_DATABASE_PATH)
                 .child(chatKey)
-                .orderByChild("timestamp")
                 .removeEventListener(dataCallback);
     }
 
@@ -220,6 +205,13 @@ public class ChatApi {
     public static void createUser(String userId, String name, String email) {
         DatabaseReference userRef = dbRef.child(USERS_DATABASE_PATH).child(userId);
         ChatUser user = new ChatUser(email, name);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null &&
+                FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
+            user.setProfilePicture(FirebaseAuth.getInstance()
+                    .getCurrentUser()
+                    .getPhotoUrl()
+                    .toString());
+        }
         userRef.setValue(user);
     }
 
@@ -275,15 +267,51 @@ public class ChatApi {
                                 new GenericTypeIndicator<Map<String, Boolean>>() {
                                 };
                         Map<String, Boolean> chats = dataSnapshot.getValue(chatMapType);
-                        for (String chat : chats.keySet()) {
-                            dbRef.child(CHATS_DATABASE_PATH)
-                                    .child(chat)
-                                    .addListenerForSingleValueEvent(dataCallback);
+                        if (chats != null) {
+                            for (String chat : chats.keySet()) {
+                                dbRef.child(CHATS_DATABASE_PATH)
+                                        .child(chat)
+                                        .addListenerForSingleValueEvent(dataCallback);
+                            }
+                        } else {
+                            /* Call the callback to let activity know there
+                            are no chatrooms */
+                            dataCallback.onDataChange(null);
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    /**
+     * Subscribe a user to the notifications for all of their chatrooms.
+     *
+     * @param userId User id to subscribe.
+     */
+    public static void subscribeAllUserChats(String userId) {
+        dbRef.child(USERS_DATABASE_PATH)
+                .child(userId)
+                .child("chats")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        GenericTypeIndicator<Map<String, Boolean>> chatMapType =
+                                new GenericTypeIndicator<Map<String, Boolean>>() {
+                                };
+                        Map<String, Boolean> chats = dataSnapshot.getValue(chatMapType);
+                        if (chats != null) {
+                            for (String chat : chats.keySet()) {
+                                FirebaseMessaging.getInstance().subscribeToTopic(chat);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
     }

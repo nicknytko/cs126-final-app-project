@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,7 +69,7 @@ public class MessagesViewAdapter extends
             messages.add(newMessage);
         } else {
             int index = 0;
-            for (int i = messages.size() - 2; i >= 0 && index == 0; i--) {
+            for (int i = messages.size() - 1; i >= 0 && index == 0; i--) {
                 if (newMessage.getTimestamp() < messages.get(i).getTimestamp()) {
                     index = i;
                 }
@@ -83,6 +84,7 @@ public class MessagesViewAdapter extends
         private CircularImageView profilePicture;
         private TextView messageData;
         private TextView timeStamp;
+        private String currentUserId;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
@@ -90,6 +92,7 @@ public class MessagesViewAdapter extends
             profilePicture = (CircularImageView) itemView.findViewById(R.id.iv_profile_picture);
             messageData = (TextView) itemView.findViewById(R.id.tv_message_text);
             timeStamp = (TextView) itemView.findViewById(R.id.tv_timestamp);
+            currentUserId = null;
         }
 
         /**
@@ -98,9 +101,26 @@ public class MessagesViewAdapter extends
          * @param message Message to bind.
          */
 
-        public void bind(ChatMessage message) {
+        public void bind(final ChatMessage message) {
             messageData.setText(message.getMessage());
             timeStamp.setText(new Date(message.getTimestamp()).toString());
+
+            currentUserId = message.getUserId();
+            if (profilePicture != null) {
+                UserCache.getUser(message.getUserId(), new UserCache.UserLoadedCallback() {
+                    @Override
+                    public void onLoaded(ChatUser user) {
+                    /* Don't load the profile picture if the view was
+                    scrolled and it's a different user */
+                        if (user.getProfilePicture() != null &&
+                                message.getUserId() == currentUserId) {
+                            Picasso.with(profilePicture.getContext())
+                                    .load(user.getProfilePicture())
+                                    .into(profilePicture);
+                        }
+                    }
+                });
+            }
         }
     }
 }

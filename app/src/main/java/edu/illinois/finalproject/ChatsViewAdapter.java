@@ -82,6 +82,16 @@ public class ChatsViewAdapter extends
         notifyDataSetChanged();
     }
 
+    /**
+     * Gets the chatroom id of a chatroom at a specific index.
+     *
+     * @param position Index of the chat to get id of.
+     * @return String chatroom id that can be passed to Firebase.
+     */
+    public String getChatId(int position) {
+        return chatIds.get(position);
+    }
+
     public class ChatsViewHolder extends RecyclerView.ViewHolder {
         private CircularImageView icon;
         private TextView name;
