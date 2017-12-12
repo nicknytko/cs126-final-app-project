@@ -6,8 +6,8 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/iv_profile_picture"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@android:drawable/sym_def_app_icon"/>
 
     <TextView
@@ -15,21 +15,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="1dp"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/iv_profile_picture"
         android:text="User Name"
         android:textSize="18sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-    <TextView
-        android:id="@+id/tv_user_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_user_name"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
-        android:layout_toEndOf="@+id/iv_profile_picture"
-        android:text="User Email"
-        android:textSize="14sp" />
 
 </RelativeLayout>

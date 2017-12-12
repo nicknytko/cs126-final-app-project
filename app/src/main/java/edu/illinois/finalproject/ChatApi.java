@@ -259,7 +259,7 @@ public class ChatApi {
         dbRef.child(USERS_DATABASE_PATH)
                 .child(userId)
                 .child("chats")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         /* From each chat, get its data from the chats json group */
@@ -271,7 +271,7 @@ public class ChatApi {
                             for (String chat : chats.keySet()) {
                                 dbRef.child(CHATS_DATABASE_PATH)
                                         .child(chat)
-                                        .addListenerForSingleValueEvent(dataCallback);
+                                        .addValueEventListener(dataCallback);
                             }
                         } else {
                             /* Call the callback to let activity know there
@@ -337,7 +337,9 @@ public class ChatApi {
     public static void searchUserByEmail(String email, ChildEventListener dataCallback) {
         dbRef.child(USERS_DATABASE_PATH)
                 .orderByChild("email")
-                .equalTo(email)
+                .startAt(email)
+                .endAt(email + "\uf8ff")
+                //.once("value")
                 .addChildEventListener(dataCallback);
     }
 }

@@ -1,6 +1,7 @@
 package edu.illinois.finalproject;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +35,8 @@ public class MessagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
 
         /* Enable the back button */
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         /* Set up UI elements */
         final EditText messageInput = (EditText) findViewById(R.id.et_chat_input);
@@ -54,7 +56,11 @@ public class MessagesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
-                /* Do stuff with this */
+                if (chatRoom != null) {
+                    if (chatRoom.getName() != null) {
+                        actionBar.setTitle(chatRoom.getName());
+                    }
+                }
             }
 
             @Override

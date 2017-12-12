@@ -3,6 +3,7 @@ package edu.illinois.finalproject;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,10 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Created by Nicolas Nytko on 12/6/17.
@@ -23,8 +24,7 @@ import java.util.Locale;
 
 public class ChatsViewAdapter extends
         RecyclerView.Adapter<ChatsViewAdapter.ChatsViewHolder> {
-    private List<ChatRoom> chats = new ArrayList<>();
-    private List<String> chatIds = new ArrayList<>();
+    private SortedMap<String, ChatRoom> chats = new TreeMap<>();
 
     @Override
     public int getItemViewType(int position) {
@@ -41,14 +41,15 @@ public class ChatsViewAdapter extends
 
     @Override
     public void onBindViewHolder(ChatsViewHolder holder, int position) {
-        holder.bind(chats.get(position));
+        Log.d("TAG", chats.values().getClass().getName());
+        holder.bind(chats.values().toArray(new ChatRoom[0])[position]);
         final Context context = holder.itemView.getContext();
         final int finalPos = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MessagesActivity.class);
-                intent.putExtra(MessagesActivity.CHAT_ID_PARCELABLE_TAG, chatIds.get(finalPos));
+                intent.putExtra(MessagesActivity.CHAT_ID_PARCELABLE_TAG, getChatId(finalPos));
                 context.startActivity(intent);
             }
         });
@@ -66,8 +67,7 @@ public class ChatsViewAdapter extends
      */
 
     public void addChat(String chatId, ChatRoom chatRoom) {
-        chatIds.add(chatId);
-        chats.add(chatRoom);
+        chats.put(chatId, chatRoom);
         notifyDataSetChanged();
     }
 
@@ -78,7 +78,7 @@ public class ChatsViewAdapter extends
      */
 
     public void removeChat(int position) {
-        chats.remove(position);
+        chats.remove(getChatId(position));
         notifyDataSetChanged();
     }
 
@@ -89,7 +89,7 @@ public class ChatsViewAdapter extends
      * @return String chatroom id that can be passed to Firebase.
      */
     public String getChatId(int position) {
-        return chatIds.get(position);
+        return chats.keySet().toArray(new String[0])[position];
     }
 
     public class ChatsViewHolder extends RecyclerView.ViewHolder {
