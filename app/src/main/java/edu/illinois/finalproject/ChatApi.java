@@ -160,27 +160,30 @@ public class ChatApi {
     }
 
     /**
-     * Obtains details about a single chat room.
-     *
-     * @param chatKey  Chat room to look up.
-     * @param callback Function callback to run when data is obtained.
-     */
-    public static void getChatroomDetails(String chatKey, ValueEventListener callback) {
-        dbRef.child(CHATS_DATABASE_PATH)
-                .child(chatKey)
-                .addListenerForSingleValueEvent(callback);
-    }
-
-    /**
      * Get all messages sent in a given chat.
      *
      * @param chatKey      Chat room id to get messages from.
      * @param newDataAdded Function to run when message data changes.
      */
-    public static void setMessageHandler(String chatKey, ChildEventListener newDataAdded) {
+    public static void setMessageHandler(String chatKey, final ChildEventListener newDataAdded) {
         dbRef.child(MESSAGES_DATABASE_PATH)
                 .child(chatKey)
                 .addChildEventListener(newDataAdded);
+
+        dbRef.child(MESSAGES_DATABASE_PATH)
+                .child(chatKey)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            newDataAdded.onChildAdded(null, null);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 
     /**

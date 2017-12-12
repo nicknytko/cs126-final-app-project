@@ -1,5 +1,8 @@
 package edu.illinois.finalproject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Date;
@@ -9,7 +12,7 @@ import java.util.Date;
  */
 
 @IgnoreExtraProperties
-public class ChatMessage {
+public class ChatMessage implements Parcelable {
     private String message;
     private long timestamp;
     private String userId;
@@ -55,4 +58,34 @@ public class ChatMessage {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.message);
+        dest.writeLong(this.timestamp);
+        dest.writeString(this.userId);
+    }
+
+    protected ChatMessage(Parcel in) {
+        this.message = in.readString();
+        this.timestamp = in.readLong();
+        this.userId = in.readString();
+    }
+
+    public static final Parcelable.Creator<ChatMessage> CREATOR = new Parcelable.Creator<ChatMessage>() {
+        @Override
+        public ChatMessage createFromParcel(Parcel source) {
+            return new ChatMessage(source);
+        }
+
+        @Override
+        public ChatMessage[] newArray(int size) {
+            return new ChatMessage[size];
+        }
+    };
 }

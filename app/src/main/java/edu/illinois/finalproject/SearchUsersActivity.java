@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +28,7 @@ public class SearchUsersActivity extends AppCompatActivity {
 
     /**
      * The user has selected another user, terminate this activity and return the selected user.
+     *
      * @param userId User ID that was selected.
      */
     public void returnUser(String userId) {

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -43,7 +42,7 @@ public class ChatsViewAdapter extends
     @Override
     public void onBindViewHolder(ChatsViewHolder holder, int position) {
         Log.d("TAG", chats.values().getClass().getName());
-        holder.bind(chats.values().toArray(new ChatRoom[0])[position]);
+        holder.bind(getChat(position));
         final Context context = holder.itemView.getContext();
         final int finalPos = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +50,7 @@ public class ChatsViewAdapter extends
             public void onClick(View v) {
                 Intent intent = new Intent(context, MessagesActivity.class);
                 intent.putExtra(MessagesActivity.CHAT_ID_PARCELABLE_TAG, getChatId(finalPos));
+                intent.putExtra(MessagesActivity.CHAT_DATA_PARCELABLE_TAG, getChat(finalPos));
                 context.startActivity(intent);
             }
         });
@@ -91,6 +91,10 @@ public class ChatsViewAdapter extends
      */
     public String getChatId(int position) {
         return chats.keySet().toArray(new String[0])[position];
+    }
+
+    public ChatRoom getChat(int position) {
+        return chats.values().toArray(new ChatRoom[0])[position];
     }
 
     public class ChatsViewHolder extends RecyclerView.ViewHolder {

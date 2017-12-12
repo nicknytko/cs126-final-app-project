@@ -26,6 +26,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
 public class ChatsActivity extends AppCompatActivity {
     private static final int FIND_USER_REQUEST_CODE = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

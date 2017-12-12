@@ -14,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by Nicolas Nytko on 12/6/17.
@@ -25,7 +24,8 @@ import com.google.firebase.database.ValueEventListener;
  */
 
 public class MessagesActivity extends AppCompatActivity {
-    public static final String CHAT_ID_PARCELABLE_TAG = "chat_id";
+    public static final String CHAT_ID_PARCELABLE_TAG = "chatId";
+    public static final String CHAT_DATA_PARCELABLE_TAG = "chatData";
     private ChildEventListener messageHandler;
     private String chatId;
 
@@ -35,7 +35,7 @@ public class MessagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
 
         /* Enable the back button */
-        final ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         /* Set up UI elements */
@@ -52,28 +52,18 @@ public class MessagesActivity extends AppCompatActivity {
 
         /* Get chat data like name & icon */
         chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
-        ChatApi.getChatroomDetails(chatId, new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ChatRoom chatRoom = dataSnapshot.getValue(ChatRoom.class);
-                if (chatRoom != null) {
-                    if (chatRoom.getName() != null) {
-                        actionBar.setTitle(chatRoom.getName());
-                    }
-                }
-            }
+        final ChatRoom chatRoom = getIntent().getParcelableExtra(CHAT_DATA_PARCELABLE_TAG);
+        actionBar.setTitle(chatRoom.getName());
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        /* TODO: set icon */
 
         /* Set up a handler to handle messages getting sent */
         messageHandler = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                adapter.addMessage(dataSnapshot.getValue(ChatMessage.class));
+                if (dataSnapshot != null) {
+                    adapter.addMessage(dataSnapshot.getValue(ChatMessage.class));
+                }
                 progressBar.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);
             }

@@ -60,7 +60,7 @@ public class UserSearchAdapter extends
      * Add a user to the search list recycler view.
      *
      * @param userId ID of the user to add.
-     * @param user User to add.
+     * @param user   User to add.
      */
     public void addUser(String userId, ChatUser user) {
         userIds.add(userId);
