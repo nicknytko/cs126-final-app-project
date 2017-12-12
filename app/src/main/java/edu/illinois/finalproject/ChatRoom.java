@@ -1,5 +1,7 @@
 package edu.illinois.finalproject;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.Map;
 
 /**
@@ -11,12 +13,14 @@ public class ChatRoom {
     private String icon;
     private ChatMessage lastMessage;
     private Map<String, Boolean> users;
+    private ChatApi.Type type;
 
     ChatRoom() {
         name = null;
         icon = null;
         lastMessage = null;
         users = null;
+        type = null;
     }
 
     ChatRoom(String name, String icon, ChatMessage lastMessage) {
@@ -55,5 +59,23 @@ public class ChatRoom {
 
     public void setUsers(Map<String, Boolean> users) {
         this.users = users;
+    }
+
+    public String getType() {
+        return type.toString();
+    }
+
+    public void setType(String type) {
+        this.type = ChatApi.Type.valueOf("CHAT_" + type.toUpperCase());
+    }
+
+    @Exclude
+    public ChatApi.Type getTypeEnum() {
+        return type;
+    }
+
+    @Exclude
+    public void setTypeEnum(ChatApi.Type type) {
+        this.type = type;
     }
 }

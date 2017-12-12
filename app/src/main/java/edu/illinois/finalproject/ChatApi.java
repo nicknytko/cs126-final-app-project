@@ -341,7 +341,7 @@ public class ChatApi {
                 .startAt(name)
                 .endAt(name + "\uf8ff")
                 .addChildEventListener(dataCallback);
-        
+
         /* Code for partial match found at:
          https://stackoverflow.com/questions/38618953/
              how-to-do-a-simple-search-in-string-in-firebase-database

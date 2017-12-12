@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -130,9 +131,12 @@ public class ChatsViewAdapter extends
                         new SimpleDateFormat("M/d/y h:mm a", Locale.US);
                 lastTimeStamp.setText(
                         dateFormat.format(new Date(chatRoom.getLastMessage().getTimestamp())));
+
+                lastMessage.setVisibility(View.VISIBLE);
+                lastTimeStamp.setVisibility(View.VISIBLE);
             } else {
-                lastMessage.setText("");
-                lastTimeStamp.setText("");
+                lastMessage.setVisibility(View.INVISIBLE);
+                lastTimeStamp.setVisibility(View.INVISIBLE);
             }
         }
     }

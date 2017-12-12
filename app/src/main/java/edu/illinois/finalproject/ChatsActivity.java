@@ -25,6 +25,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
  */
 
 public class ChatsActivity extends AppCompatActivity {
+    private static final int FIND_USER_REQUEST_CODE = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,16 +45,39 @@ public class ChatsActivity extends AppCompatActivity {
         ChatApi.getAllUserChats(FirebaseAuth.getInstance().getUid(),
                 new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
                         progressSpinner.setVisibility(View.INVISIBLE);
                         if (dataSnapshot == null) {
                             /* If datasnapshot is null then there are no chatrooms */
                             noChatsText.setVisibility(View.VISIBLE);
                         } else {
-                            ChatRoom room = dataSnapshot.getValue(ChatRoom.class);
-                            adapter.addChat(dataSnapshot.getKey(), room);
+                            final ChatRoom room = dataSnapshot.getValue(ChatRoom.class);
                             for (String user : room.getUsers().keySet()) {
                                 UserCache.loadUser(user, null);
+                            }
+
+                            if (room.getTypeEnum() == ChatApi.Type.CHAT_GROUP) {
+                                adapter.addChat(dataSnapshot.getKey(), room);
+                            } else if (room.getTypeEnum() == ChatApi.Type.CHAT_ONE_ON_ONE) {
+                                String otherUser = null;
+                                String currentUser = FirebaseAuth.getInstance().getUid();
+                                for (String user : room.getUsers().keySet()) {
+                                    if (!user.equals(currentUser)) {
+                                        otherUser = user;
+                                    }
+                                }
+                                UserCache.loadUser(otherUser, new UserCache.UserLoadedCallback() {
+                                    @Override
+                                    public void onLoaded(ChatUser user) {
+                                        ChatRoom userChat = new ChatRoom();
+                                        userChat.setLastMessage(room.getLastMessage());
+                                        userChat.setTypeEnum(room.getTypeEnum());
+                                        userChat.setUsers(room.getUsers());
+                                        userChat.setName(user.getName());
+                                        userChat.setIcon(user.getProfilePicture());
+                                        adapter.addChat(dataSnapshot.getKey(), userChat);
+                                    }
+                                });
                             }
                             noChatsText.setVisibility(View.INVISIBLE);
                         }
@@ -94,8 +118,19 @@ public class ChatsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SearchUsersActivity.class);
-                context.startActivity(intent);
+                //context.startActivity(intent);
+                startActivityForResult(intent, FIND_USER_REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && requestCode == FIND_USER_REQUEST_CODE) {
+            String newUser = data.getStringExtra(SearchUsersActivity.USER_ID_PARCELABLE_TAG);
+            String[] users = new String[]{FirebaseAuth.getInstance().getUid(), newUser};
+            ChatApi.createChat(null, users, ChatApi.Type.CHAT_ONE_ON_ONE);
+        }
     }
 }

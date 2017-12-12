@@ -1,6 +1,5 @@
 package edu.illinois.finalproject;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import java.util.List;
 public class UserSearchAdapter extends
         RecyclerView.Adapter<UserSearchAdapter.UserViewHolder> {
     private List<ChatUser> users = new ArrayList<>();
+    private List<String> userIds = new ArrayList<>();
     private SearchUsersActivity activity;
 
     UserSearchAdapter(SearchUsersActivity activity) {
@@ -41,11 +41,12 @@ public class UserSearchAdapter extends
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
+        final int finalPos = position;
         holder.bind(users.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.finish();
+                activity.returnUser(userIds.get(finalPos));
             }
         });
     }
@@ -58,9 +59,11 @@ public class UserSearchAdapter extends
     /**
      * Add a user to the search list recycler view.
      *
+     * @param userId ID of the user to add.
      * @param user User to add.
      */
-    public void addUser(ChatUser user) {
+    public void addUser(String userId, ChatUser user) {
+        userIds.add(userId);
         users.add(user);
         notifyDataSetChanged();
     }

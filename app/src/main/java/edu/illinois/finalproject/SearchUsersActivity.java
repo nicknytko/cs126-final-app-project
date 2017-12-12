@@ -1,5 +1,7 @@
 package edu.illinois.finalproject;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,8 +23,20 @@ import com.google.firebase.database.DatabaseError;
  */
 
 public class SearchUsersActivity extends AppCompatActivity {
+    public static final String USER_ID_PARCELABLE_TAG = "userId";
     private UserSearchAdapter adapter;
     private static final int MIN_SEARCH_LENGTH = 4;
+
+    /**
+     * The user has selected another user, terminate this activity and return the selected user.
+     * @param userId User ID that was selected.
+     */
+    public void returnUser(String userId) {
+        Intent result = new Intent();
+        result.putExtra(USER_ID_PARCELABLE_TAG, userId);
+        setResult(Activity.RESULT_OK, result);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +71,11 @@ public class SearchUsersActivity extends AppCompatActivity {
             ChatApi.searchUserByName(query, new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    adapter.addUser(dataSnapshot.getValue(ChatUser.class));
+                    if (!dataSnapshot.getKey().equals(FirebaseAuth.getInstance().getUid())) {
+                        /* Dont add ourselves */
+                        adapter.addUser(dataSnapshot.getKey(),
+                                dataSnapshot.getValue(ChatUser.class));
+                    }
                 }
 
                 @Override
