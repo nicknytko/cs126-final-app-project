@@ -51,6 +51,10 @@ public class ChatUser {
         return name;
     }
 
+    public String getSearchName() {
+        return name.toLowerCase();
+    }
+
     public void setName(String name) {
         this.name = name;
     }

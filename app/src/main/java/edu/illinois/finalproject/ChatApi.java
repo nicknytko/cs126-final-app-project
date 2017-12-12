@@ -329,17 +329,24 @@ public class ChatApi {
     }
 
     /**
-     * Searches for a given user by their email address.
+     * Searches for a given user by their full name.
      *
-     * @param email        Email to search by.
+     * @param name         Name to search by.
      * @param dataCallback Function to run when the data is retrieved.
      */
-    public static void searchUserByEmail(String email, ChildEventListener dataCallback) {
+    public static void searchUserByName(String name, ChildEventListener dataCallback) {
+        name = name.toLowerCase();
         dbRef.child(USERS_DATABASE_PATH)
-                .orderByChild("email")
-                .startAt(email)
-                .endAt(email + "\uf8ff")
-                //.once("value")
+                .orderByChild("searchName")
+                .startAt(name)
+                .endAt(name + "\uf8ff")
                 .addChildEventListener(dataCallback);
+        
+        /* Code for partial match found at:
+         https://stackoverflow.com/questions/38618953/
+             how-to-do-a-simple-search-in-string-in-firebase-database
+         The \uf8ff is a high unicode character and so it will match most
+         other characters.
+          */
     }
 }

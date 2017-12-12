@@ -53,7 +53,7 @@ public class SearchUsersActivity extends AppCompatActivity {
     private void searchUser(String query) {
         adapter.removeAllUsers();
         if (query.length() >= MIN_SEARCH_LENGTH) {
-            ChatApi.searchUserByEmail(query, new ChildEventListener() {
+            ChatApi.searchUserByName(query, new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     adapter.addUser(dataSnapshot.getValue(ChatUser.class));
