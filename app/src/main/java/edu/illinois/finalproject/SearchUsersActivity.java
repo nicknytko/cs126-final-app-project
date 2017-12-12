@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseError;
 public class SearchUsersActivity extends AppCompatActivity {
     public static final String USER_ID_PARCELABLE_TAG = "userId";
     private UserSearchAdapter adapter;
-    private static final int MIN_SEARCH_LENGTH = 4;
+    private static final int MIN_SEARCH_LENGTH = 3;
 
     /**
      * The user has selected another user, terminate this activity and return the selected user.
@@ -65,6 +65,10 @@ public class SearchUsersActivity extends AppCompatActivity {
                 LinearLayoutManager.VERTICAL, false));
     }
 
+    /**
+     * Start a search for a given user through Firebase.
+     * @param query Search query.  Will match start of name.
+     */
     private void searchUser(String query) {
         adapter.removeAllUsers();
         if (query.length() >= MIN_SEARCH_LENGTH) {

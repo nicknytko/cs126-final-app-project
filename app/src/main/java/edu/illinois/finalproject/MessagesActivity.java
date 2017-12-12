@@ -9,11 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Nicolas Nytko on 12/6/17.
@@ -34,10 +37,6 @@ public class MessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        /* Enable the back button */
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         /* Set up UI elements */
         final EditText messageInput = (EditText) findViewById(R.id.et_chat_input);
         final MessagesViewAdapter adapter = new MessagesViewAdapter();
@@ -52,10 +51,8 @@ public class MessagesActivity extends AppCompatActivity {
 
         /* Get chat data like name & icon */
         chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
-        final ChatRoom chatRoom = getIntent().getParcelableExtra(CHAT_DATA_PARCELABLE_TAG);
-        actionBar.setTitle(chatRoom.getName());
-
-        /* TODO: set icon */
+        ChatRoom chatRoom = getIntent().getParcelableExtra(CHAT_DATA_PARCELABLE_TAG);
+        updateActionBar(chatRoom);
 
         /* Set up a handler to handle messages getting sent */
         messageHandler = new ChildEventListener() {
@@ -98,6 +95,25 @@ public class MessagesActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Updates the top action bar to display chatroom details.
+     * @param details Current chatroom to pull details from.
+     */
+    private void updateActionBar(ChatRoom details) {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(R.layout.action_bar_messages);
+
+        TextView title = (TextView) actionBar.getCustomView().findViewById(R.id.tv_chat_name);
+        title.setText(details.getName());
+
+        CircularImageView image = (CircularImageView) actionBar.getCustomView().
+                findViewById(R.id.iv_chat_icon);
+        Picasso.with(this).load(details.getIcon()).into(image);
     }
 
     @Override
