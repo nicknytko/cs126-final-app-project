@@ -3,7 +3,6 @@ package edu.illinois.finalproject;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ public class ChatsViewAdapter extends
 
     @Override
     public void onBindViewHolder(ChatsViewHolder holder, int position) {
-        Log.d("TAG", chats.values().getClass().getName());
         holder.bind(getChat(position));
         final Context context = holder.itemView.getContext();
         final int finalPos = position;
