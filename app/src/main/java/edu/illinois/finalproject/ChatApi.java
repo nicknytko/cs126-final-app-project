@@ -23,15 +23,15 @@ public class ChatApi {
      * The types of chat that a room can be.  Either a group chat or a 1-on-1 user chat.
      */
     public enum Type {
-        CHAT_GROUP,
-        CHAT_ONE_ON_ONE;
+        GROUP,
+        ONE_ON_ONE;
 
         @Override
         public String toString() {
             switch (this) {
-                case CHAT_GROUP:
+                case GROUP:
                     return "group";
-                case CHAT_ONE_ON_ONE:
+                case ONE_ON_ONE:
                     return "one_on_one";
                 default:
                     return "unknown";

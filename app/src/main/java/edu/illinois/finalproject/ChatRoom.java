@@ -70,7 +70,7 @@ public class ChatRoom implements Parcelable {
     }
 
     public void setType(String type) {
-        this.type = ChatApi.Type.valueOf("CHAT_" + type.toUpperCase());
+        this.type = ChatApi.Type.valueOf(type.toUpperCase());
     }
 
     @Exclude

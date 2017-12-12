@@ -26,6 +26,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
 public class ChatsActivity extends AppCompatActivity {
     private static final int FIND_USER_REQUEST_CODE = 0;
+    private ChatsViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class ChatsActivity extends AppCompatActivity {
         final TextView noChatsText = (TextView) findViewById(R.id.tv_no_chats);
         final ProgressBar progressSpinner = (ProgressBar) findViewById(R.id.pb_loading_spinner);
 
-        final ChatsViewAdapter adapter = new ChatsViewAdapter();
+        adapter = new ChatsViewAdapter();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_chats);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
@@ -48,37 +49,22 @@ public class ChatsActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
                         progressSpinner.setVisibility(View.INVISIBLE);
+
                         if (dataSnapshot == null) {
                             /* If datasnapshot is null then there are no chatrooms */
                             noChatsText.setVisibility(View.VISIBLE);
                         } else {
                             final ChatRoom room = dataSnapshot.getValue(ChatRoom.class);
+                            /* Cache all the users so that they will be loaded by the time
+                            the user picks a chat room */
                             for (String user : room.getUsers().keySet()) {
                                 UserCache.loadUser(user, null);
                             }
 
-                            if (room.getTypeEnum() == ChatApi.Type.CHAT_GROUP) {
+                            if (room.getTypeEnum() == ChatApi.Type.GROUP) {
                                 adapter.addChat(dataSnapshot.getKey(), room);
-                            } else if (room.getTypeEnum() == ChatApi.Type.CHAT_ONE_ON_ONE) {
-                                String otherUser = null;
-                                String currentUser = FirebaseAuth.getInstance().getUid();
-                                for (String user : room.getUsers().keySet()) {
-                                    if (!user.equals(currentUser)) {
-                                        otherUser = user;
-                                    }
-                                }
-                                UserCache.loadUser(otherUser, new UserCache.UserLoadedCallback() {
-                                    @Override
-                                    public void onLoaded(ChatUser user) {
-                                        ChatRoom userChat = new ChatRoom();
-                                        userChat.setLastMessage(room.getLastMessage());
-                                        userChat.setTypeEnum(room.getTypeEnum());
-                                        userChat.setUsers(room.getUsers());
-                                        userChat.setName(user.getName());
-                                        userChat.setIcon(user.getProfilePicture());
-                                        adapter.addChat(dataSnapshot.getKey(), userChat);
-                                    }
-                                });
+                            } else if (room.getTypeEnum() == ChatApi.Type.ONE_ON_ONE) {
+                                addOneOnOneChat(dataSnapshot.getKey(), room);
                             }
                             noChatsText.setVisibility(View.INVISIBLE);
                         }
@@ -131,7 +117,37 @@ public class ChatsActivity extends AppCompatActivity {
         if (data != null && requestCode == FIND_USER_REQUEST_CODE) {
             String newUser = data.getStringExtra(SearchUsersActivity.USER_ID_PARCELABLE_TAG);
             String[] users = new String[]{FirebaseAuth.getInstance().getUid(), newUser};
-            ChatApi.createChat(null, users, ChatApi.Type.CHAT_ONE_ON_ONE);
+            ChatApi.createChat(null, users, ChatApi.Type.ONE_ON_ONE);
+        }
+    }
+
+    /**
+     * Add a one to one chatroom to the list.  These have to be specially handled because
+     * metadata is gotten from the other user in the chatroom.
+     * @param chatId ID of the chatroom.
+     * @param room Metadata of the chatroom as gotten from Firebase.
+     */
+    private void addOneOnOneChat(final String chatId, final ChatRoom room) {
+        String otherUser = null;
+        String currentUser = FirebaseAuth.getInstance().getUid();
+        for (String user : room.getUsers().keySet()) {
+            if (!user.equals(currentUser)) {
+                otherUser = user;
+            }
+        }
+        if (otherUser != null) {
+            UserCache.loadUser(otherUser, new UserCache.UserLoadedCallback() {
+                @Override
+                public void onLoaded(ChatUser user) {
+                    ChatRoom userChat = new ChatRoom();
+                    userChat.setLastMessage(room.getLastMessage());
+                    userChat.setTypeEnum(room.getTypeEnum());
+                    userChat.setUsers(room.getUsers());
+                    userChat.setName(user.getName());
+                    userChat.setIcon(user.getProfilePicture());
+                    adapter.addChat(chatId, userChat);
+                }
+            });
         }
     }
 }
