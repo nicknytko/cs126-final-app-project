@@ -205,17 +205,28 @@ public class ChatApi {
      * @param name   Full name of the user.
      * @param email  Email address of the user.
      */
-    public static void createUser(String userId, String name, String email) {
-        DatabaseReference userRef = dbRef.child(USERS_DATABASE_PATH).child(userId);
-        ChatUser user = new ChatUser(email, name);
-        if (FirebaseAuth.getInstance().getCurrentUser() != null &&
-                FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
-            user.setProfilePicture(FirebaseAuth.getInstance()
-                    .getCurrentUser()
-                    .getPhotoUrl()
-                    .toString());
-        }
-        userRef.setValue(user);
+    public static void createUser(String userId, final String name, final String email) {
+        final DatabaseReference userRef = dbRef.child(USERS_DATABASE_PATH).child(userId);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    /* Create the user only if they do not already exist */
+                    ChatUser user = new ChatUser(email, name);
+                    if (FirebaseAuth.getInstance().getCurrentUser() != null &&
+                            FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() != null) {
+                        user.setProfilePicture(FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getPhotoUrl()
+                                .toString());
+                    }
+                    userRef.setValue(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     /**

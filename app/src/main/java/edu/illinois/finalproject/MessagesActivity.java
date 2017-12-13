@@ -1,5 +1,7 @@
 package edu.illinois.finalproject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,6 +34,7 @@ public class MessagesActivity extends AppCompatActivity {
     public static final String CHAT_DATA_PARCELABLE_TAG = "chatData";
     private ChildEventListener messageHandler;
     private String chatId;
+    private ChatRoom chatRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,7 @@ public class MessagesActivity extends AppCompatActivity {
 
         /* Get chat data like name & icon */
         chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
-        ChatRoom chatRoom = getIntent().getParcelableExtra(CHAT_DATA_PARCELABLE_TAG);
+        chatRoom = getIntent().getParcelableExtra(CHAT_DATA_PARCELABLE_TAG);
         updateActionBar(chatRoom);
 
         /* Set up a handler to handle messages getting sent */
@@ -111,8 +115,24 @@ public class MessagesActivity extends AppCompatActivity {
         TextView title = (TextView) actionBar.getCustomView().findViewById(R.id.tv_chat_name);
         title.setText(details.getName());
 
-        CircularImageView image = (CircularImageView) actionBar.getCustomView().
-                findViewById(R.id.iv_chat_icon);
+        ImageView settings = (ImageView) actionBar.getCustomView()
+                .findViewById(R.id.iv_settings_button);
+        if (details.getTypeEnum() == ChatApi.Type.GROUP) {
+            final Context context = this;
+            settings.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ChatRoomSettingsActivity.class);
+                    intent.putExtra(ChatRoomSettingsActivity.CHAT_DATA_PARCELABLE_TAG, chatRoom);
+                    startActivityForResult(intent, 0);
+                }
+            });
+        } else {
+            settings.setVisibility(View.INVISIBLE);
+        }
+
+        CircularImageView image = (CircularImageView) actionBar.getCustomView()
+                .findViewById(R.id.iv_chat_icon);
         Picasso.with(this).load(details.getIcon()).into(image);
     }
 

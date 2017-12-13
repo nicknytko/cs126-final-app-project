@@ -18,6 +18,7 @@
         <activity android:name=".ChatsActivity"/>
         <activity android:name=".MessagesActivity"/>
         <activity android:name=".SearchUsersActivity"/>
+        <activity android:name=".ChatRoomSettingsActivity"/>
     </application>
 
 </manifest>

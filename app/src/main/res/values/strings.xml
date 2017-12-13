@@ -6,4 +6,5 @@
     <string name="chat_input_label">Write a message...</string>
     <string name="placeholder_text_message">Hello, World! This is an example of a chat message that spans multiple lines.</string>
     <string name="placeholder_text_time">1:37 PM</string>
+    <string name="chat_settings_title">Edit Chatroom</string>
 </resources>
