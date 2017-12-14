@@ -2,6 +2,7 @@ package edu.illinois.finalproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,9 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -23,7 +26,7 @@ import java.util.TreeMap;
 
 public class ChatsViewAdapter extends
         RecyclerView.Adapter<ChatsViewAdapter.ChatsViewHolder> {
-    private SortedMap<String, ChatRoom> chats = new TreeMap<>();
+    private List<Pair<String, ChatRoom>> chats = new ArrayList<>();
 
     @Override
     public int getItemViewType(int position) {
@@ -66,8 +69,45 @@ public class ChatsViewAdapter extends
      */
 
     public void addChat(String chatId, ChatRoom chatRoom) {
-        chats.put(chatId, chatRoom);
+        Pair<String, ChatRoom> newPair = new Pair<>(chatId, chatRoom);
+        removeChatById(chatId);
+
+        if (chats.size() == 0 ||
+                chatRoom.getLastTimestamp() == 0 ||
+                chatRoom.getLastTimestamp() < chats.get(0).second.getLastTimestamp()) {
+            chats.add(0, newPair);
+        } else {
+            /* Insertion sort into the correct spot */
+            int index = chats.size();
+            for (int i = 0; i < chats.size() && index == chats.size(); i++) {
+                if (chatRoom.getLastTimestamp() > chats.get(i).second.getLastTimestamp()) {
+                    index = i;
+                }
+            }
+            chats.add(index, newPair);
+        }
         notifyDataSetChanged();
+    }
+
+    /**
+     * Removes all chats from the list.
+     */
+    public void clearChats() {
+        chats.clear();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Removes a chat by its chatId if it exists.
+     * @param chatId Chat Id to remove by.
+     */
+    public void removeChatById(String chatId) {
+        for (int i = 0; i < chats.size(); i++) {
+            if (chats.get(i).first.equals(chatId)) {
+                chats.remove(i);
+                return;
+            }
+        }
     }
 
     /**
@@ -88,11 +128,16 @@ public class ChatsViewAdapter extends
      * @return String chatroom id that can be passed to Firebase.
      */
     public String getChatId(int position) {
-        return chats.keySet().toArray(new String[0])[position];
+        return chats.get(position).first;
     }
 
+    /**
+     * Gets the chatroom object at a specific index.
+     * @param position Index of the chat to get.
+     * @return Chatroom object.
+     */
     public ChatRoom getChat(int position) {
-        return chats.values().toArray(new ChatRoom[0])[position];
+        return chats.get(position).second;
     }
 
     public class ChatsViewHolder extends RecyclerView.ViewHolder {

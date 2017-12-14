@@ -58,9 +58,18 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserViewHolder> {
      * @param user   User to add.
      */
     public void addUser(String userId, ChatUser user) {
-        userIds.add(userId);
-        users.add(user);
-        notifyDataSetChanged();
+        /* Don't add the user if they already exist */
+        boolean userExists = false;
+        for (String currentUserId : userIds) {
+            if (currentUserId.equals(userId)) {
+                userExists = true;
+            }
+        }
+        if (!userExists) {
+            userIds.add(userId);
+            users.add(user);
+            notifyDataSetChanged();
+        }
     }
 
     /**
@@ -68,6 +77,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserViewHolder> {
      */
     public void removeAllUsers() {
         users.clear();
+        userIds.clear();
         notifyDataSetChanged();
     }
 }

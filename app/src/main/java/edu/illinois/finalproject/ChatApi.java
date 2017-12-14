@@ -292,9 +292,11 @@ public class ChatApi {
      * Get all the chats that a user is in.
      *
      * @param userId       Id of the user to lookup.
+     * @param newChatCallback Function that is run whenever a new chatroom is created
      * @param dataCallback Function that is run for each chatroom that is loaded.
      */
-    public static void getAllUserChats(String userId, final ValueEventListener dataCallback) {
+    public static void getAllUserChats(String userId, final StateChangeListener newChatCallback,
+                                       final ValueEventListener dataCallback) {
         /* First get the list of all chats that the user is in */
         dbRef.child(USERS_DATABASE_PATH)
                 .child(userId)
@@ -302,6 +304,7 @@ public class ChatApi {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        newChatCallback.onChange();
                         /* From each chat, get its data from the chats json group */
                         GenericTypeIndicator<Map<String, Boolean>> chatMapType =
                                 new GenericTypeIndicator<Map<String, Boolean>>() {
@@ -388,5 +391,9 @@ public class ChatApi {
          The \uf8ff is a high unicode character and so it will match most
          other characters.
           */
+    }
+
+    interface StateChangeListener {
+        void onChange();
     }
 }

@@ -22,7 +22,7 @@
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/iv_profile_picture"
         android:text="User Name"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <TextView
@@ -34,6 +34,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:text="User Email"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

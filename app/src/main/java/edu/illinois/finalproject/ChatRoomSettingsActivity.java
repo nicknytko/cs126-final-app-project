@@ -50,6 +50,8 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
         chatName = (EditText) findViewById(R.id.et_chat_name);
         chatIconText = (EditText) findViewById(R.id.et_chat_icon);
         chatIcon = (CircularImageView) findViewById(R.id.iv_chat_icon);
+
+        /* Start the user search activity when the add user button is pressed */
         final Context context = this;
         findViewById(R.id.btn_add_user).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +61,17 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
             }
         });
         setupRecyclerView();
+
+        /* Update the group pic when focus is changed away from the input box */
+        chatIconText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focus) {
+                if (!focus) {
+                    Picasso.with(context).load(chatIconText.getText().toString()).into(chatIcon);
+                }
+            }
+        });
+
         if (chatRoom != null) {
             if (chatRoom.getUsers().isEmpty()) {
                 chatRoom.getUsers().put(FirebaseAuth.getInstance().getUid(), true);
@@ -138,16 +151,6 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
         if (chatRoom.getIcon() != null && !chatRoom.getIcon().isEmpty()) {
             Picasso.with(context).load(chatRoom.getIcon()).into(chatIcon);
         }
-
-        /* Update the group pic when focus is changed away from the input box */
-        chatIconText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean focus) {
-                if (!focus) {
-                    Picasso.with(context).load(chatIconText.getText().toString()).into(chatIcon);
-                }
-            }
-        });
     }
 
     @Override

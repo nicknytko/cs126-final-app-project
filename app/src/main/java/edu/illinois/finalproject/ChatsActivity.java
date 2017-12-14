@@ -50,24 +50,34 @@ public class ChatsActivity extends AppCompatActivity {
         final ProgressBar progressSpinner = (ProgressBar) findViewById(R.id.pb_loading_spinner);
         ChatApi.subscribeAllUserChats(FirebaseAuth.getInstance().getUid());
         ChatApi.getAllUserChats(FirebaseAuth.getInstance().getUid(),
+                new ChatApi.StateChangeListener() {
+                    @Override
+                    public void onChange() {
+                        progressSpinner.setVisibility(View.INVISIBLE);
+                        adapter.clearChats();
+                    }
+                },
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        progressSpinner.setVisibility(View.INVISIBLE);
-
                         if (dataSnapshot == null) {
                             /* If datasnapshot is null then there are no chatrooms */
 
                             noChatsText.setVisibility(View.VISIBLE);
                         } else {
                             ChatRoom room = dataSnapshot.getValue(ChatRoom.class);
-                            if (room != null) {
+                            boolean inChat = false;
+                            if (room != null && room.getUsers() != null) {
                                 /* Cache all the users so that they will be loaded by the time
-                                   the user picks a chat room */
-
+                               the user picks a chat room */
                                 for (String user : room.getUsers().keySet()) {
                                     UserCache.loadUser(user, null);
+                                    if (user.equals(FirebaseAuth.getInstance().getUid())) {
+                                        inChat = true;
+                                    }
                                 }
+                            }
+                            if (inChat) {
                                 if (room.getTypeEnum() == ChatApi.Type.GROUP) {
                                     adapter.addChat(dataSnapshot.getKey(), room);
                                 } else if (room.getTypeEnum() == ChatApi.Type.ONE_ON_ONE) {

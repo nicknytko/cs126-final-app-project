@@ -83,6 +83,15 @@ public class ChatRoom implements Parcelable {
         this.type = type;
     }
 
+    @Exclude
+    public long getLastTimestamp() {
+        if (lastMessage == null) {
+            return 0;
+        } else {
+            return lastMessage.getTimestamp();
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;
