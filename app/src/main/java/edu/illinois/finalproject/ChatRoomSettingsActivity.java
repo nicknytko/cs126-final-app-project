@@ -47,10 +47,6 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
         if (getIntent().hasExtra(CHAT_ID_PARCELABLE_TAG)) {
             chatRoomId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
         }
-        if (chatRoom.getUsers().isEmpty()) {
-            chatRoom.getUsers().put(FirebaseAuth.getInstance().getUid(), true);
-        }
-
         chatName = (EditText) findViewById(R.id.et_chat_name);
         chatIconText = (EditText) findViewById(R.id.et_chat_icon);
         chatIcon = (CircularImageView) findViewById(R.id.iv_chat_icon);
@@ -64,11 +60,15 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
         });
         setupRecyclerView();
         if (chatRoom != null) {
-            setUsersList();
+            if (chatRoom.getUsers().isEmpty()) {
+                chatRoom.getUsers().put(FirebaseAuth.getInstance().getUid(), true);
+            }
+            setUsersList(chatRoom.getUsers().keySet().toArray(new String[0]));
             setDefaultLabels();
             getSupportActionBar().setTitle(getString(R.string.chat_settings_title));
         } else {
             getSupportActionBar().setTitle(getString(R.string.chat_new_chat_title));
+            setUsersList(new String[]{FirebaseAuth.getInstance().getUid()});
         }
     }
 
@@ -117,8 +117,8 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
     /**
      * Populates the users recycler view list.
      */
-    private void setUsersList() {
-        for (final String userId : chatRoom.getUsers().keySet()) {
+    private void setUsersList(String[] users) {
+        for (final String userId : users) {
             UserCache.getUser(userId, new UserCache.UserLoadedCallback() {
                 @Override
                 public void onLoaded(ChatUser user) {
@@ -135,7 +135,9 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
         chatName.setText(chatRoom.getName());
         chatIconText.setText(chatRoom.getIcon());
         final Context context = this;
-        Picasso.with(context).load(chatRoom.getIcon()).into(chatIcon);
+        if (chatRoom.getIcon() != null && !chatRoom.getIcon().isEmpty()) {
+            Picasso.with(context).load(chatRoom.getIcon()).into(chatIcon);
+        }
 
         /* Update the group pic when focus is changed away from the input box */
         chatIconText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -158,7 +160,14 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
             chatRoom.setIcon(chatIconText.getText().toString());
             chatRoom.setName(chatName.getText().toString());
             chatRoom.setUsers(adapter.getUserIds());
-            ChatApi.updateChatDetails(chatRoomId, chatRoom);
+            if (chatRoomId == null) {
+                String newChatId = ChatApi.createChat(chatRoom);
+                for (String userId : adapter.getUserIds().keySet()) {
+                    ChatApi.addUserToChat(newChatId, userId);
+                }
+            } else {
+                ChatApi.updateChatDetails(chatRoomId, chatRoom);
+            }
 
             Intent result = new Intent();
             result.putExtra(CHAT_DATA_PARCELABLE_TAG, chatRoom);
@@ -175,15 +184,17 @@ public class ChatRoomSettingsActivity extends AppCompatActivity {
         if (data != null && requestCode == FIND_USER_REQUEST_CODE) {
             final String newUserId =
                     data.getStringExtra(SearchUsersActivity.USER_ID_PARCELABLE_TAG);
-            UserCache.loadUser(newUserId, new UserCache.UserLoadedCallback() {
-                @Override
-                public void onLoaded(ChatUser newUserData) {
-                    adapter.addUser(newUserId, newUserData);
-                    if (chatRoom != null) {
-                        ChatApi.addUserToChat(chatRoomId, newUserId);
+            if (!adapter.userExists(newUserId)) {
+                UserCache.loadUser(newUserId, new UserCache.UserLoadedCallback() {
+                    @Override
+                    public void onLoaded(ChatUser newUserData) {
+                        adapter.addUser(newUserId, newUserData);
+                        if (chatRoom != null) {
+                            ChatApi.addUserToChat(chatRoomId, newUserId);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 

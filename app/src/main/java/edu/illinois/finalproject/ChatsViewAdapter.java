@@ -120,7 +120,7 @@ public class ChatsViewAdapter extends
 
         public void bind(ChatRoom chatRoom) {
             name.setText(chatRoom.getName());
-            if (chatRoom.getIcon() != null) {
+            if (chatRoom.getIcon() != null && !chatRoom.getIcon().isEmpty()) {
                 Picasso.with(icon.getContext())
                         .load(chatRoom.getIcon())
                         .into(icon);

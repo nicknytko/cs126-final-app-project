@@ -67,6 +67,7 @@ public class SearchUsersActivity extends AppCompatActivity {
 
     /**
      * Start a search for a given user through Firebase.
+     *
      * @param query Search query.  Will match start of name.
      */
     private void searchUser(String query) {

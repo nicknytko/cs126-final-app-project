@@ -238,13 +238,15 @@ public class ChatApi {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
     /**
      * Updates a chatroom's metadata.
-     * @param chatId Chatroom ID to update.
+     *
+     * @param chatId  Chatroom ID to update.
      * @param details Data to update with.
      */
     public static void updateChatDetails(String chatId, ChatRoom details) {

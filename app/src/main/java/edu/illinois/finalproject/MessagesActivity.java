@@ -131,10 +131,11 @@ public class MessagesActivity extends AppCompatActivity {
         } else {
             settings.setVisibility(View.INVISIBLE);
         }
-
-        CircularImageView image = (CircularImageView) actionBar.getCustomView()
-                .findViewById(R.id.iv_chat_icon);
-        Picasso.with(this).load(chatRoom.getIcon()).into(image);
+        if (chatRoom.getIcon() != null && !chatRoom.getIcon().isEmpty()) {
+            CircularImageView image = (CircularImageView) actionBar.getCustomView()
+                    .findViewById(R.id.iv_chat_icon);
+            Picasso.with(this).load(chatRoom.getIcon()).into(image);
+        }
     }
 
     @Override

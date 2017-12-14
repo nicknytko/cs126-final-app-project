@@ -8,4 +8,6 @@
     <string name="placeholder_text_time">1:37 PM</string>
     <string name="chat_settings_title">Edit Chatroom</string>
     <string name="chat_new_chat_title">New Chatroom</string>
+    <string name="create_new_message">New Message</string>
+    <string name="create_new_group">New Group</string>
 </resources>

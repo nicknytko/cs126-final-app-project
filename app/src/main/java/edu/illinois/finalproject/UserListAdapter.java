@@ -43,6 +43,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     /**
      * Finds the user ID from a specific view position.
+     *
      * @param position Index to get id from.
      * @return User ID as a string.
      */
@@ -64,6 +65,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     /**
      * Removes a user from the list of users.
+     *
      * @param position User index to remove.
      */
     public void removeUser(int position) {
@@ -73,7 +75,23 @@ public class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> {
     }
 
     /**
+     * Checks if a user is already present in the list
+     *
+     * @param userId User ID to check by.
+     * @return True if the user exists, false otherwise.
+     */
+    public boolean userExists(String userId) {
+        for (String currentUser : userIds) {
+            if (currentUser.equals(userId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Generate a map of users that can be sent directly to firebase.
+     *
      * @return Map of users.
      */
     public Map<String, Boolean> getUserIds() {
