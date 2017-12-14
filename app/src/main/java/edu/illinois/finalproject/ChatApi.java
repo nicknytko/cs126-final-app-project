@@ -13,8 +13,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.Map;
 
 public class ChatApi {
-    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static DatabaseReference dbRef = database.getReference();
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final DatabaseReference dbRef = database.getReference();
     private static final String CHATS_DATABASE_PATH = "chats";
     private static final String MESSAGES_DATABASE_PATH = "messages";
     private static final String USERS_DATABASE_PATH = "users";

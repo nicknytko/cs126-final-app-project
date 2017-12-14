@@ -7,10 +7,6 @@ import android.widget.TextView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by nicolas on 12/13/17.
- */
-
 public class UserViewHolder extends RecyclerView.ViewHolder {
     public CircularImageView icon;
     public TextView name;

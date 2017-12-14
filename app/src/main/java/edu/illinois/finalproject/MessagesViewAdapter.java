@@ -113,7 +113,7 @@ public class MessagesViewAdapter extends
                     /* Don't load the profile picture if the view was
                     scrolled and it's a different user */
                         if (user.getProfilePicture() != null &&
-                                message.getUserId() == currentUserId) {
+                                message.getUserId().equals(currentUserId)) {
                             Picasso.with(profilePicture.getContext())
                                     .load(user.getProfilePicture())
                                     .into(profilePicture);

@@ -8,10 +8,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Nicolas Nytko on 12/6/17.
- */
-
 public class UserSearchAdapter extends RecyclerView.Adapter<UserViewHolder> {
     private List<ChatUser> users = new ArrayList<>();
     private List<String> userIds = new ArrayList<>();

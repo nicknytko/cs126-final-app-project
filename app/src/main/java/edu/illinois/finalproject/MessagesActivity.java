@@ -22,10 +22,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Nicolas Nytko on 12/6/17.
- */
-
-/**
  * Activity displaying all of the given messages in a single chatroom.
  */
 
@@ -115,6 +111,7 @@ public class MessagesActivity extends AppCompatActivity {
         TextView title = (TextView) actionBar.getCustomView().findViewById(R.id.tv_chat_name);
         title.setText(chatRoom.getName());
 
+        /* Enable the settings menu only in group chats */
         ImageView settings = (ImageView) actionBar.getCustomView()
                 .findViewById(R.id.iv_settings_button);
         if (chatRoom.getTypeEnum() == ChatApi.Type.GROUP) {
@@ -131,6 +128,7 @@ public class MessagesActivity extends AppCompatActivity {
         } else {
             settings.setVisibility(View.INVISIBLE);
         }
+        /* Load in a profile picture if it exists */
         if (chatRoom.getIcon() != null && !chatRoom.getIcon().isEmpty()) {
             CircularImageView image = (CircularImageView) actionBar.getCustomView()
                     .findViewById(R.id.iv_chat_icon);

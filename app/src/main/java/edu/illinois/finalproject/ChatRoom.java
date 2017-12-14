@@ -115,7 +115,7 @@ public class ChatRoom implements Parcelable {
         this.icon = in.readString();
         this.lastMessage = in.readParcelable(ChatMessage.class.getClassLoader());
         int usersSize = in.readInt();
-        this.users = new HashMap<String, Boolean>(usersSize);
+        this.users = new HashMap<>(usersSize);
         for (int i = 0; i < usersSize; i++) {
             String key = in.readString();
             Boolean value = (Boolean) in.readValue(Boolean.class.getClassLoader());

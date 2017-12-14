@@ -20,10 +20,6 @@ import com.squareup.picasso.Picasso;
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
-/**
- * Created by nicolas on 12/13/17.
- */
-
 public class ChatRoomSettingsActivity extends AppCompatActivity {
     public static final String CHAT_DATA_PARCELABLE_TAG = "chatData";
     public static final String CHAT_ID_PARCELABLE_TAG = "chatId";

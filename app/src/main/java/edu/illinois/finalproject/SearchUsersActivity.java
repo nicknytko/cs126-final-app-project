@@ -14,10 +14,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
 /**
- * Created by Nicolas Nytko on 12/6/17.
- */
-
-/**
  * Activity to search for users in order to create a new chat room.
  */
 

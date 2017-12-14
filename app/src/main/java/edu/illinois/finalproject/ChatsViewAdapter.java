@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * Created by Nicolas Nytko on 12/6/17.
@@ -117,7 +115,7 @@ public class ChatsViewAdapter extends
      */
 
     public void removeChat(int position) {
-        chats.remove(getChatId(position));
+        chats.remove(position);
         notifyDataSetChanged();
     }
 

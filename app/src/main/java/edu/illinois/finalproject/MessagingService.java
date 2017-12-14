@@ -18,7 +18,6 @@ public class MessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage message) {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher);
@@ -27,7 +26,6 @@ public class MessagingService extends FirebaseMessagingService {
             builder.setContentTitle(message.getNotification().getTitle())
                     .setContentText(message.getNotification().getBody());
         }
-
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 }
