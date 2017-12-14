@@ -20,6 +20,11 @@ import com.squareup.picasso.Picasso;
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
+/**
+ * Activity for changing settings for a group chat.  Can either be run on an existing group chat
+ * or when passed an empty one, will create a new one.
+ */
+
 public class ChatRoomSettingsActivity extends AppCompatActivity {
     public static final String CHAT_DATA_PARCELABLE_TAG = "chatData";
     public static final String CHAT_ID_PARCELABLE_TAG = "chatId";

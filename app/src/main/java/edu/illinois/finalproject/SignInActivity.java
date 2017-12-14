@@ -21,6 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+/**
+ * Login activity that displays a Google login button.
+ */
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     private GoogleSignInClient googleClient;
     private FirebaseAuth firebaseAuth;

@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Nicolas Nytko on 12/6/17.
- */
-
 public class MessagesViewAdapter extends
         RecyclerView.Adapter<MessagesViewAdapter.MessageViewHolder> {
     private List<ChatMessage> messages = new ArrayList<>();

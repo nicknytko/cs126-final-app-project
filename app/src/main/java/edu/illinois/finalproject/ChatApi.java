@@ -291,9 +291,9 @@ public class ChatApi {
     /**
      * Get all the chats that a user is in.
      *
-     * @param userId       Id of the user to lookup.
+     * @param userId          Id of the user to lookup.
      * @param newChatCallback Function that is run whenever a new chatroom is created
-     * @param dataCallback Function that is run for each chatroom that is loaded.
+     * @param dataCallback    Function that is run for each chatroom that is loaded.
      */
     public static void getAllUserChats(String userId, final StateChangeListener newChatCallback,
                                        final ValueEventListener dataCallback) {

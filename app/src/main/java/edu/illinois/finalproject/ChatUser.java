@@ -5,7 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.util.Map;
 
 /**
- * Created by Nicolas Nytko on 11/29/17.
+ * Class that represents a chat user in the Firebase database.
  */
 
 @IgnoreExtraProperties

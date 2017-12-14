@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Nicolas Nytko on 12/6/17.
+ * Class that represents a chatroom in the firebase database.
  */
 
 public class ChatRoom implements Parcelable {

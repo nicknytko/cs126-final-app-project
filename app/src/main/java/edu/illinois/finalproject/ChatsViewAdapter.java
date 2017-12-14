@@ -18,10 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by Nicolas Nytko on 12/6/17.
- */
-
 public class ChatsViewAdapter extends
         RecyclerView.Adapter<ChatsViewAdapter.ChatsViewHolder> {
     private List<Pair<String, ChatRoom>> chats = new ArrayList<>();
@@ -97,6 +93,7 @@ public class ChatsViewAdapter extends
 
     /**
      * Removes a chat by its chatId if it exists.
+     *
      * @param chatId Chat Id to remove by.
      */
     public void removeChatById(String chatId) {
@@ -131,6 +128,7 @@ public class ChatsViewAdapter extends
 
     /**
      * Gets the chatroom object at a specific index.
+     *
      * @param position Index of the chat to get.
      * @return Chatroom object.
      */
@@ -170,6 +168,8 @@ public class ChatsViewAdapter extends
             } else {
                 icon.setImageResource(android.R.drawable.sym_def_app_icon);
             }
+
+            /* Display the last sent message and timestamp if they exist */
             if (chatRoom.getLastMessage() != null) {
                 lastMessage.setText(chatRoom.getLastMessage().getMessage());
                 SimpleDateFormat dateFormat =

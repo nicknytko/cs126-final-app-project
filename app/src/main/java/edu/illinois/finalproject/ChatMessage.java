@@ -8,7 +8,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.util.Date;
 
 /**
- * Created by Nicolas Nytko on 11/28/17.
+ * Class that represents a chatroom message in the firebase database.
  */
 
 @IgnoreExtraProperties

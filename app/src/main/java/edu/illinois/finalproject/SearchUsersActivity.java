@@ -14,7 +14,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
 /**
- * Activity to search for users in order to create a new chat room.
+ * Activity to search for users in order to create a new chat room.  Will return the user, if any,
+ * that was selected in the search.
  */
 
 public class SearchUsersActivity extends AppCompatActivity {
