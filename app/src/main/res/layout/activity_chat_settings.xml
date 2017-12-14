@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp" >
+    android:layout_margin="8dp">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/iv_chat_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@android:drawable/sym_def_app_icon"/>
+        android:src="@android:drawable/sym_def_app_icon" />
 
     <EditText
         android:id="@+id/et_chat_name"
@@ -30,11 +30,39 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/iv_chat_icon"
         android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:hint="Group Chat Icon URL"
+        app:layout_constraintBottom_toTopOf="@+id/rv_user_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_chat_icon"
         app:layout_constraintTop_toBottomOf="@+id/et_chat_name" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_user_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_add_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_chat_icon" />
+
+    <Button
+        android:id="@+id/btn_add_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Add New User"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

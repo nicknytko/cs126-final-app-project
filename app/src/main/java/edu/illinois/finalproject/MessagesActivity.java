@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 public class MessagesActivity extends AppCompatActivity {
     public static final String CHAT_ID_PARCELABLE_TAG = "chatId";
     public static final String CHAT_DATA_PARCELABLE_TAG = "chatData";
+    private static final int CHAT_SETTINGS_REQUEST_CODE = 0;
     private ChildEventListener messageHandler;
     private String chatId;
     private ChatRoom chatRoom;
@@ -56,7 +57,7 @@ public class MessagesActivity extends AppCompatActivity {
         /* Get chat data like name & icon */
         chatId = getIntent().getStringExtra(CHAT_ID_PARCELABLE_TAG);
         chatRoom = getIntent().getParcelableExtra(CHAT_DATA_PARCELABLE_TAG);
-        updateActionBar(chatRoom);
+        updateActionBar();
 
         /* Set up a handler to handle messages getting sent */
         messageHandler = new ChildEventListener() {
@@ -103,9 +104,8 @@ public class MessagesActivity extends AppCompatActivity {
 
     /**
      * Updates the top action bar to display chatroom details.
-     * @param details Current chatroom to pull details from.
      */
-    private void updateActionBar(ChatRoom details) {
+    private void updateActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -113,18 +113,19 @@ public class MessagesActivity extends AppCompatActivity {
         actionBar.setCustomView(R.layout.action_bar_messages);
 
         TextView title = (TextView) actionBar.getCustomView().findViewById(R.id.tv_chat_name);
-        title.setText(details.getName());
+        title.setText(chatRoom.getName());
 
         ImageView settings = (ImageView) actionBar.getCustomView()
                 .findViewById(R.id.iv_settings_button);
-        if (details.getTypeEnum() == ChatApi.Type.GROUP) {
+        if (chatRoom.getTypeEnum() == ChatApi.Type.GROUP) {
             final Context context = this;
             settings.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, ChatRoomSettingsActivity.class);
                     intent.putExtra(ChatRoomSettingsActivity.CHAT_DATA_PARCELABLE_TAG, chatRoom);
-                    startActivityForResult(intent, 0);
+                    intent.putExtra(ChatRoomSettingsActivity.CHAT_ID_PARCELABLE_TAG, chatId);
+                    startActivityForResult(intent, CHAT_SETTINGS_REQUEST_CODE);
                 }
             });
         } else {
@@ -133,7 +134,16 @@ public class MessagesActivity extends AppCompatActivity {
 
         CircularImageView image = (CircularImageView) actionBar.getCustomView()
                 .findViewById(R.id.iv_chat_icon);
-        Picasso.with(this).load(details.getIcon()).into(image);
+        Picasso.with(this).load(chatRoom.getIcon()).into(image);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && requestCode == CHAT_SETTINGS_REQUEST_CODE) {
+            chatRoom = data.getParcelableExtra(ChatRoomSettingsActivity.CHAT_DATA_PARCELABLE_TAG);
+            updateActionBar();
+        }
     }
 
     @Override

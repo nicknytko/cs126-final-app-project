@@ -12,9 +12,9 @@ import com.squareup.picasso.Picasso;
  */
 
 public class UserViewHolder extends RecyclerView.ViewHolder {
-    private CircularImageView icon;
-    private TextView name;
-    private TextView email;
+    public CircularImageView icon;
+    public TextView name;
+    public TextView email;
 
     public UserViewHolder(View itemView) {
         super(itemView);

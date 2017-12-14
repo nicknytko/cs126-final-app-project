@@ -65,6 +65,19 @@ public class ChatApi {
     }
 
     /**
+     * Create a chat room object and return its new key.
+     *
+     * @param data chat room data.
+     * @return The id of the chat room that was created.
+     */
+    public static String createChat(ChatRoom data) {
+        DatabaseReference newChat =
+                dbRef.child(CHATS_DATABASE_PATH).push();
+        newChat.setValue(data);
+        return newChat.getKey();
+    }
+
+    /**
      * Delete a chat room from firebase.
      *
      * @param chatKey Chat key to delete from the database.
@@ -227,6 +240,17 @@ public class ChatApi {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+    }
+
+    /**
+     * Updates a chatroom's metadata.
+     * @param chatId Chatroom ID to update.
+     * @param details Data to update with.
+     */
+    public static void updateChatDetails(String chatId, ChatRoom details) {
+        dbRef.child(CHATS_DATABASE_PATH)
+                .child(chatId)
+                .setValue(details);
     }
 
     /**

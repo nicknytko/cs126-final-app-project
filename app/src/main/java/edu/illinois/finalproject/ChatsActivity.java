@@ -105,7 +105,6 @@ public class ChatsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SearchUsersActivity.class);
-                //context.startActivity(intent);
                 startActivityForResult(intent, FIND_USER_REQUEST_CODE);
             }
         });
