@@ -2,8 +2,6 @@
 
 A small messaging app for android created as the final project for CS 126 at UIUC.
 
--
-
 ![Screenshot](screenshot.png)
 
 Features:
